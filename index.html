@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Subway Surfers Klon</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game" width="800" height="600"></canvas>
+
+    <div id="hud" class="hidden">
+      <div id="score-box">Score: <span id="score">0</span></div>
+      <div id="coins-box">🪙 <span id="coins">0</span></div>
+      <div id="speed-box"><span id="speed">0</span> km/h</div>
+    </div>
+
+    <div id="menu" class="overlay">
+      <h1>🚇 SUBWAY<br />RUNNER</h1>
+      <p class="subtitle">Weiche den Zügen aus. Sammle Münzen.</p>
+      <div class="controls-info">
+        <p><b>← / →</b> oder <b>A / D</b>: Spur wechseln</p>
+        <p><b>↑ / W / Space</b>: Springen</p>
+        <p><b>↓ / S</b>: Rollen</p>
+        <p><b>P</b>: Pause &nbsp;•&nbsp; <b>Touch:</b> Swipen</p>
+      </div>
+      <button id="btn-start" class="big-btn">▶ Spielen</button>
+      <p class="hiscore">Highscore: <span id="menu-hiscore">0</span></p>
+    </div>
+
+    <div id="gameover" class="overlay hidden">
+      <h1>💥 GAME OVER</h1>
+      <p class="subtitle">Vom Zug erwischt!</p>
+      <div class="result">
+        <p>Score: <span id="final-score">0</span></p>
+        <p>Münzen: <span id="final-coins">0</span></p>
+        <p class="hiscore">Highscore: <span id="final-hiscore">0</span> <span id="new-record" class="hidden">🏆 NEU!</span></p>
+      </div>
+      <button id="btn-restart" class="big-btn">↻ Nochmal</button>
+    </div>
+
+    <div id="pause" class="overlay hidden">
+      <h1>⏸ PAUSE</h1>
+      <button id="btn-resume" class="big-btn">Weiter</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
