@@ -71,29 +71,40 @@ class Player {
     this.runPhase += dt * (6 + speed * 0.25);
   }
 
+  // Asuka Langley Soryu (Fan-Art, Canvas-nachempfunden):
+  // langes orange-rotes Haar, rote A10-Interface-Clips, roter Plugsuit 02.
   draw(ctx, proj) {
     const s = proj.scale(0);
     const px = proj.x(this.laneX, 0);
     const py = proj.y(0, this.y * 30); // y in Welt (max ~4) -> Pixel (~120px Sprunghöhe)
-    const base = (W) => W * (ctx.canvas.width / 800) * s;
+    const base = (v) => v * (ctx.canvas.width / 800) * s;
+    const HAIR = '#d9621c', HAIR_D = '#a8430f', HAIR_L = '#f59a4d';
+    const SUIT = '#c81e2e', SUIT_D = '#8c1220', TRIM = '#111318';
+    const SKIN = '#ffd2a1';
 
     ctx.save();
     ctx.translate(px, py);
 
     if (this.isRolling) {
-      // Rolle: Kugel
+      // Rolle: eingerollter Plugsuit + Haarwirbel
       const r = base(26);
-      ctx.fillStyle = '#222';
-      ctx.beginPath(); ctx.ellipse(0, -r * 0.7, r * 1.1, r * 0.8, this.runPhase * 2, 0, Math.PI * 2); ctx.fill();
-      // Kopf
-      ctx.fillStyle = '#ffcc99';
-      ctx.beginPath(); ctx.arc(r * 0.4, -r * 1.1, r * 0.45, 0, Math.PI * 2); ctx.fill();
-      // Cap
-      ctx.fillStyle = '#e11d48';
-      ctx.fillRect(r * 0.4 - r * 0.45, -r * 1.6, r * 0.9, r * 0.35);
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.beginPath(); ctx.ellipse(0, base(4), r * 1.1, r * 0.35, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = SUIT;
+      ctx.beginPath(); ctx.ellipse(0, -r * 0.7, r * 1.05, r * 0.8, this.runPhase * 2, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = TRIM; ctx.lineWidth = base(3);
+      ctx.beginPath(); ctx.ellipse(0, -r * 0.7, r * 1.05, r * 0.8, this.runPhase * 2, 0, Math.PI * 2); ctx.stroke();
+      // Haarsträhne wirbelt mit
+      ctx.strokeStyle = HAIR; ctx.lineWidth = base(7); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.ellipse(0, -r * 0.7, r * 1.35, r * 0.5, this.runPhase * 2 + 0.6, 0.3, Math.PI * 1.2); ctx.stroke();
+      // A10-Clip blitzt
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-r * 0.2, -r * 1.5, r * 0.45, r * 0.28);
+      ctx.fillStyle = SUIT;
+      ctx.fillRect(-r * 0.2, -r * 1.5, r * 0.45, r * 0.1);
     } else {
       const run = Math.sin(this.runPhase * 2);
-      const H = base(72);   // Körperhöhe
+      const H = base(74);
       const legSwing = this.jumping ? 0.5 : run * 0.55;
       const bob = this.jumping ? 0 : Math.abs(Math.cos(this.runPhase * 2)) * base(3);
 
@@ -105,8 +116,13 @@ class Player {
       ctx.fill();
 
       ctx.translate(0, -bob);
-      // Beine
-      ctx.strokeStyle = '#1e3a8a';
+      // Hinterhaar (lang, bis Hüfte)
+      ctx.fillStyle = HAIR_D;
+      ctx.beginPath();
+      ctx.roundRect(-base(17), -H * 1.12, base(34), H * 0.72, base(10));
+      ctx.fill();
+      // Beine (Plugsuit rot, schwarze Einsätze)
+      ctx.strokeStyle = SUIT;
       ctx.lineWidth = base(11);
       ctx.lineCap = 'round';
       ctx.beginPath();
@@ -115,18 +131,39 @@ class Player {
       ctx.moveTo(0, -H * 0.45);
       ctx.lineTo(base(10) * legSwing + base(4), 0);
       ctx.stroke();
-      // Schuhe
-      ctx.fillStyle = '#fff';
+      ctx.strokeStyle = TRIM;
+      ctx.lineWidth = base(4);
+      ctx.beginPath();
+      ctx.moveTo(0, -H * 0.45);
+      ctx.lineTo(-base(10) * legSwing - base(4), -base(2));
+      ctx.moveTo(0, -H * 0.45);
+      ctx.lineTo(base(10) * legSwing + base(4), -base(2));
+      ctx.stroke();
+      // Stiefel (weiß/rot)
+      ctx.fillStyle = '#eee';
       ctx.fillRect(-base(10) * legSwing - base(11), -base(8), base(16), base(8));
       ctx.fillRect(base(10) * legSwing - base(3), -base(8), base(16), base(8));
-      // Torso (Hoodie)
-      ctx.fillStyle = '#22c55e';
+      ctx.fillStyle = SUIT;
+      ctx.fillRect(-base(10) * legSwing - base(11), -base(8), base(16), base(3));
+      ctx.fillRect(base(10) * legSwing - base(3), -base(8), base(16), base(3));
+      // Torso (Plugsuit 02)
+      ctx.fillStyle = SUIT;
       const tw = base(30);
       ctx.beginPath();
       ctx.roundRect(-tw / 2, -H * 0.9, tw, H * 0.48, base(8));
       ctx.fill();
+      // schwarzes Brust-/Bauch-Interface + weiße Linie
+      ctx.fillStyle = TRIM;
+      ctx.beginPath();
+      ctx.roundRect(-tw * 0.28, -H * 0.86, tw * 0.56, H * 0.3, base(4));
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-tw / 2 + base(2), -H * 0.52, tw - base(4), base(2));
+      ctx.font = `bold ${Math.max(5, base(10))}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('02', 0, -H * 0.6);
       // Arme
-      ctx.strokeStyle = '#16a34a';
+      ctx.strokeStyle = SUIT;
       ctx.lineWidth = base(9);
       ctx.beginPath();
       ctx.moveTo(0, -H * 0.8);
@@ -135,12 +172,26 @@ class Player {
       ctx.lineTo(base(16), -H * 0.5 - run * base(8));
       ctx.stroke();
       // Kopf
-      ctx.fillStyle = '#ffcc99';
+      ctx.fillStyle = SKIN;
       ctx.beginPath(); ctx.arc(0, -H * 1.02, base(13), 0, Math.PI * 2); ctx.fill();
-      // Cap
-      ctx.fillStyle = '#e11d48';
-      ctx.beginPath(); ctx.arc(0, -H * 1.06, base(13), Math.PI, 0); ctx.fill();
-      ctx.fillRect(0, -H * 1.08, base(20), base(5));
+      // blaue Augen (stolz, nach vorn)
+      ctx.fillStyle = '#1d4ed8';
+      ctx.fillRect(-base(7), -H * 1.04, base(4), base(3));
+      ctx.fillRect(base(3), -H * 1.04, base(4), base(3));
+      // Pony + lange Vordersträhnen
+      ctx.fillStyle = HAIR;
+      ctx.beginPath(); ctx.arc(0, -H * 1.07, base(13.5), Math.PI * 1.02, Math.PI * 1.98); ctx.fill();
+      ctx.fillRect(-base(14), -H * 1.06, base(6), base(22));
+      ctx.fillRect(base(8), -H * 1.06, base(6), base(22));
+      ctx.fillStyle = HAIR_L;
+      ctx.fillRect(-base(12), -H * 1.14, base(4), base(10));
+      // A10-Nervenclips (weiß mit rotem Streifen, beidseitig)
+      for (const side of [-1, 1]) {
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(side * base(13) - base(3), -H * 1.12, base(7), base(11));
+        ctx.fillStyle = SUIT;
+        ctx.fillRect(side * base(13) - base(3), -H * 1.08, base(7), base(3));
+      }
     }
     ctx.restore();
   }

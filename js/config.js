@@ -7,9 +7,9 @@ const CONFIG = {
   spawnDistance: 90,     // Welt-Einheiten bis zum Horizont
   despawnZ: -4,
 
-  baseSpeed: 22,         // Welt-Einheiten / Sekunde
+  baseSpeed: 11,         // Welt-Einheiten / Sekunde (halbiert für v2)
   maxSpeed: 55,
-  speedGain: 0.55,       // + pro Sekunde Überlebenszeit
+  speedGain: 0.275,      // + pro Sekunde Überlebenszeit (50% der alten Rate)
 
   gravity: -60,          // Sprungphysik (Einheiten/s^2, y nach oben positiv)
   jumpVelocity: 22,
